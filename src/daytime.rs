@@ -1,7 +1,6 @@
-use std::error::Error;
-
 use reqwest;
 use serde::Deserialize;
+use std::error::Error;
 
 const SUN_API_URL: &str = "https://api.sunrise-sunset.org/json";
 
@@ -32,7 +31,7 @@ pub async fn read_sunset_sunrise_time(
     long: String,
     lat: String,
 ) -> Result<SunDetails, Box<dyn Error>> {
-    let params: [(&str, String); 2] = [("lat", lat), ("lng", long)];
+    let params: [(&str, String); 3] = [("lat", lat), ("lng", long), ("tzid", "UTC".to_string())];
     let response: Result<ApiResponse, reqwest::Error> = reqwest::Client::new()
         .get(SUN_API_URL)
         .query(&params)

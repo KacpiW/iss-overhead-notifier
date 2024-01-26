@@ -1,6 +1,5 @@
 use reqwest;
 use serde::Deserialize;
-use std::error::Error;
 
 const ISS_API_URL: &str = "http://api.open-notify.org/iss-now.json";
 
@@ -19,12 +18,12 @@ pub struct IssPosition {
     pub longitude: String,
 }
 
-pub async fn read_iss_location() -> Result<IssPosition, Box<dyn Error>> {
+pub async fn read_iss_location() -> Result<IssPosition, reqwest::Error> {
     let response: Result<ApiResponse, reqwest::Error> =
         reqwest::get(ISS_API_URL).await?.json::<ApiResponse>().await;
 
     match response {
         Ok(api_response) => Ok(api_response.iss_position),
-        Err(e) => Err(Box::new(e)),
+        Err(e) => Err(reqwest::Error::from(e)),
     }
 }
